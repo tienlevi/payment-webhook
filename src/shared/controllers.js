@@ -10,11 +10,11 @@ export const billingPortal = async (req, res) => {
   try {
     const session = await stripe.billingPortal.sessions.create({
       customer: customerId,
-      return_url: "/",
+      return_url: `http://localhost:3000`,
     });
     console.log("🚀 ~ billingPortal ~ session:", session);
 
-    return res.status(200).json(session);
+    return res.status(200).json({ url: session.url });
   } catch (error) {
     return res.status(500).json(error);
   }
@@ -39,17 +39,21 @@ export const createProduct = async (req, res) => {
   }
 };
 
-export const subscriptions = async (req, res) => {
+export const paymentLink = async (req, res) => {
+  const { productId, quantity, price, currency = "usd" } = req.body;
   try {
     const paymentLink = await stripe.paymentLinks.create({
       line_items: [
         {
-          price: "price_1MoC3TLkdIwHu7ixcIbKelAC",
-          quantity: 1,
+          quantity,
+          price_data: {
+            product: productId,
+            currency,
+            unit_amount: price,
+          },
         },
       ],
     });
-
     console.log("🚀 ~ createProduct ~ product:", paymentLink);
 
     return res.status(200).json(paymentLink);
