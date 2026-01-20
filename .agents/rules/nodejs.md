@@ -20,14 +20,6 @@ trigger: always_on
     - Organize collections by domain or feature
     - Implement proper upload handling and image processing
 
-    File Structure:
-    - Collections: src/collections/{feature}.ts
-    - Globals: src/globals/{feature}.ts
-    - Fields: src/fields/{type}.ts
-    - Hooks: src/hooks/{collection}/{operation}.ts
-    - Endpoints: src/endpoints/{feature}.ts
-    - Utilities: src/utilities/{function}.ts
-
     MongoDB Patterns:
     - Design schemas with proper indexing for performance
     - Use MongoDB aggregation pipelines for complex data transformations
