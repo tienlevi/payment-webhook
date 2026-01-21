@@ -82,35 +82,30 @@ export const webhook = async (req, res) => {
 
       // Handle the event
       switch (event.type) {
-        case "payment_link.created": {
-          const paymentLink = event.data.object;
-          console.log("Payment link created:", paymentLink.id);
-          console.log("URL:", paymentLink.url);
-          // Store payment link info in your database if needed
+        //Event when the subscription started
+        case "checkout.session.completed":
+          console.log("New Subscription started!");
+          console.log(event.data);
           break;
-        }
-        case "payment_link.updated": {
-          const paymentLink = event.data.object;
-          console.log("Payment link updated:", paymentLink.id);
-          console.log("Active:", paymentLink.active);
-          // Update payment link info in your database if needed
+
+        // Event when the payment is successfull (every subscription interval)
+        case "invoice.paid":
+          console.log("Invoice paid");
+          console.log(event.data);
           break;
-        }
-        case "checkout.session.completed": {
-          const session = event.data.object;
-          const subscription = await stripe.subscriptions.retrieve(
-            session.subscription,
-          );
-          console.log("🚀 ~ webhook ~ subscription:", subscription);
-          // Fulfill the purchase - grant access, send confirmation email, etc.
+
+        // Event when the payment failed due to card problems or insufficient funds (every subscription interval)
+        case "invoice.payment_failed":
+          console.log("Invoice payment failed!");
+          console.log(event.data);
           break;
-        }
-        case "checkout.session.expired": {
-          const session = event.data.object;
-          console.log("Checkout session expired:", session.id);
-          // Handle expired checkout - notify user, clean up pending order, etc.
+
+        // Event when subscription is updated
+        case "customer.subscription.updated":
+          console.log("Subscription updated!");
+          console.log(event.data);
           break;
-        }
+
         default:
           console.log(`Unhandled event type ${event.type}`);
       }
